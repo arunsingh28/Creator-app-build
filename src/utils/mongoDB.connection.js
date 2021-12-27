@@ -55,7 +55,7 @@ var connectDB = function () { return __awaiter(void 0, void 0, void 0, function 
                     console.log('____MongoDB connected_____');
                 })
                     .catch(function (err) {
-                    console.log(err);
+                    console.log(err, '____MongoDB connection error_____');
                 })];
             case 1:
                 _a.sent();
