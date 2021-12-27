@@ -39,28 +39,52 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.connectDB = void 0;
 var mongoose_1 = __importDefault(require("mongoose"));
-var config_1 = __importDefault(require("../../config/config"));
-var connectDB = function () { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, mongoose_1.default.connect(config_1.default.mongodbUri, {
-                    useNewUrlParser: true,
-                    useUnifiedTopology: true,
-                    // useCreateIndex: true,
-                    // useFindAndModify: false
-                })
-                    .then(function () {
-                    console.log('____MongoDB connected_____');
-                })
-                    .catch(function (err) {
-                    console.log(err);
-                })];
-            case 1:
-                _a.sent();
-                return [2 /*return*/];
-        }
+var bcrypt_1 = __importDefault(require("bcrypt"));
+var adminSchema = new mongoose_1.default.Schema({
+    name: {
+        type: String,
+        required: true,
+    },
+    email: {
+        type: String,
+        required: true,
+    },
+    password: {
+        type: String,
+        required: true,
+    },
+});
+// hasing & salting  ==========================
+adminSchema.pre("save", function (next) {
+    return __awaiter(this, void 0, void 0, function () {
+        var user, salt, hash;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    user = this;
+                    if (!user.isModified("password"))
+                        return [2 /*return*/, next()];
+                    return [4 /*yield*/, bcrypt_1.default.genSalt(10)];
+                case 1:
+                    salt = _a.sent();
+                    return [4 /*yield*/, bcrypt_1.default.hashSync(user.password, salt)];
+                case 2:
+                    hash = _a.sent();
+                    user.password = hash;
+                    return [2 /*return*/, next()];
+            }
+        });
     });
-}); };
-exports.connectDB = connectDB;
+});
+adminSchema.methods.comparePassword = function (candidatePassword) {
+    return __awaiter(this, void 0, void 0, function () {
+        var user;
+        return __generator(this, function (_a) {
+            user = this;
+            return [2 /*return*/, bcrypt_1.default.compare(candidatePassword, user.password).catch(function (e) { return false; })];
+        });
+    });
+};
+var newAdmin = mongoose_1.default.model("admin", adminSchema);
+exports.default = newAdmin;

@@ -123,4 +123,9 @@ var changeUserName = function (req, res, next) { return __awaiter(void 0, void 0
         return [2 /*return*/];
     });
 }); };
-exports.default = { loginApi: loginApi, registerApi: registerApi, changeUserName: changeUserName, logoutApi: logoutApi };
+var home = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        return [2 /*return*/, res.status(200).json({ message: 'Active' })];
+    });
+}); };
+exports.default = { loginApi: loginApi, registerApi: registerApi, changeUserName: changeUserName, logoutApi: logoutApi, home: home };

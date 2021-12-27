@@ -39,23 +39,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.connectDB = void 0;
-var mongoose_1 = __importDefault(require("mongoose"));
-var config_1 = __importDefault(require("../../config/config"));
-var connectDB = function () { return __awaiter(void 0, void 0, void 0, function () {
+var aws_sdk_1 = __importDefault(require("aws-sdk"));
+var s3 = new aws_sdk_1.default.S3({
+    accessKeyId: process.env.AWS_ACESS_KEY,
+    secretAccessKey: process.env.AWS_SECRET_KEY
+});
+var deleteObject = function (key) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, mongoose_1.default.connect(config_1.default.mongodbUri, {
-                    useNewUrlParser: true,
-                    useUnifiedTopology: true,
-                    // useCreateIndex: true,
-                    // useFindAndModify: false
-                })
-                    .then(function () {
-                    console.log('____MongoDB connected_____');
-                })
-                    .catch(function (err) {
-                    console.log(err);
+            case 0: return [4 /*yield*/, s3.deleteObject({
+                    Bucket: process.env.AWS_BUCKET_NAME,
+                    Key: key
+                }, function (err) {
+                    if (err)
+                        throw err;
                 })];
             case 1:
                 _a.sent();
@@ -63,4 +60,4 @@ var connectDB = function () { return __awaiter(void 0, void 0, void 0, function 
         }
     });
 }); };
-exports.connectDB = connectDB;
+exports.default = deleteObject;

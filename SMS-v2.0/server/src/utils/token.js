@@ -39,28 +39,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.connectDB = void 0;
-var mongoose_1 = __importDefault(require("mongoose"));
-var config_1 = __importDefault(require("../../config/config"));
-var connectDB = function () { return __awaiter(void 0, void 0, void 0, function () {
+var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+var getToken = function (id) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, mongoose_1.default.connect(config_1.default.mongodbUri, {
-                    useNewUrlParser: true,
-                    useUnifiedTopology: true,
-                    // useCreateIndex: true,
-                    // useFindAndModify: false
-                })
-                    .then(function () {
-                    console.log('____MongoDB connected_____');
-                })
-                    .catch(function (err) {
-                    console.log(err);
-                })];
-            case 1:
-                _a.sent();
-                return [2 /*return*/];
-        }
+        return [2 /*return*/, jsonwebtoken_1.default.sign({ id: id }, process.env.JWT_SECRET_KEY, {
+                expiresIn: process.env.JWT_EXPIRE_TIME
+            })];
     });
 }); };
-exports.connectDB = connectDB;
+exports.default = getToken;

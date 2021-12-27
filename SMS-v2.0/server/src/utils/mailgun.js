@@ -39,28 +39,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.connectDB = void 0;
-var mongoose_1 = __importDefault(require("mongoose"));
-var config_1 = __importDefault(require("../../config/config"));
-var connectDB = function () { return __awaiter(void 0, void 0, void 0, function () {
+var mailgun_js_1 = __importDefault(require("mailgun-js"));
+// init mailgun-js
+var mail = new mailgun_js_1.default({
+    apiKey: process.env.MAILGUN_API_KEY,
+    domain: process.env.MAILGUN_DOMAIN
+});
+console.log(process.env.MAILGUN_API_KEY, process.env.MAILGUN_DOMAIN);
+// creating message
+var mailGun = function (to, subject, body) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, mongoose_1.default.connect(config_1.default.mongodbUri, {
-                    useNewUrlParser: true,
-                    useUnifiedTopology: true,
-                    // useCreateIndex: true,
-                    // useFindAndModify: false
-                })
-                    .then(function () {
-                    console.log('____MongoDB connected_____');
-                })
-                    .catch(function (err) {
-                    console.log(err);
-                })];
-            case 1:
-                _a.sent();
-                return [2 /*return*/];
-        }
+        return [2 /*return*/];
     });
 }); };
-exports.connectDB = connectDB;
+exports.default = mailGun;

@@ -8,6 +8,8 @@ var URL_1 = __importDefault(require("./URL"));
 var index_auth_1 = require("../Middlewares/Auth/index.auth");
 // update update
 function default_1(router) {
+    // home page for REST
+    router.get(URL_1.default.testing, admin_controls_1.default.home);
     // login api @method POST
     router.post(URL_1.default.login, admin_controls_1.default.loginApi);
     // register api @method POST

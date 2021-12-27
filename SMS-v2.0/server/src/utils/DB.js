@@ -41,21 +41,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.connectDB = void 0;
 var mongoose_1 = __importDefault(require("mongoose"));
-var config_1 = __importDefault(require("../../config/config"));
 var connectDB = function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, mongoose_1.default.connect(config_1.default.mongodbUri, {
+            case 0: return [4 /*yield*/, mongoose_1.default
+                    .connect(process.env.MONGODB_URI, {
                     useNewUrlParser: true,
                     useUnifiedTopology: true,
-                    // useCreateIndex: true,
-                    // useFindAndModify: false
+                    useFindAndModify: true,
+                    useCreateIndex: true,
                 })
                     .then(function () {
-                    console.log('____MongoDB connected_____');
+                    console.log("****** Connection established to Database ********");
                 })
                     .catch(function (err) {
-                    console.log(err);
+                    console.log("\n****** Connection not established to Database ********\n\n", err);
                 })];
             case 1:
                 _a.sent();

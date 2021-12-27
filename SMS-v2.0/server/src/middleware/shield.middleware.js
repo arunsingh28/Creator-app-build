@@ -39,28 +39,54 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.connectDB = void 0;
-var mongoose_1 = __importDefault(require("mongoose"));
-var config_1 = __importDefault(require("../../config/config"));
-var connectDB = function () { return __awaiter(void 0, void 0, void 0, function () {
+var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+var user_model_1 = __importDefault(require("../models/user.model"));
+var authorization = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var token, decoded, user, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, mongoose_1.default.connect(config_1.default.mongodbUri, {
-                    useNewUrlParser: true,
-                    useUnifiedTopology: true,
-                    // useCreateIndex: true,
-                    // useFindAndModify: false
-                })
-                    .then(function () {
-                    console.log('____MongoDB connected_____');
-                })
-                    .catch(function (err) {
-                    console.log(err);
-                })];
+            case 0:
+                if (req.headers.authorization &&
+                    req.headers.authorization.startsWith("Bearer")) {
+                    token = req.headers.authorization.split(" ")[1];
+                }
+                if (!token) {
+                    return [2 /*return*/, res.status(404).json({
+                            message: "not authorize to access content",
+                            code: res.statusCode,
+                            type: "error",
+                        })];
+                }
+                _a.label = 1;
             case 1:
-                _a.sent();
-                return [2 /*return*/];
+                _a.trys.push([1, 4, , 5]);
+                return [4 /*yield*/, jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET_KEY)];
+            case 2:
+                decoded = _a.sent();
+                return [4 /*yield*/, user_model_1.default.findOne({ email: decoded.id })];
+            case 3:
+                user = _a.sent();
+                if (!user) {
+                    return [2 /*return*/, res.status(203).json({
+                            message: "No user found ",
+                            code: res.statusCode,
+                            type: "error",
+                        })];
+                }
+                else {
+                    next();
+                }
+                return [3 /*break*/, 5];
+            case 4:
+                error_1 = _a.sent();
+                return [2 /*return*/, res.status(401).json({
+                        message: "Not authorize to access this route ",
+                        error: error_1,
+                        type: "error",
+                        code: res.statusCode,
+                    })];
+            case 5: return [2 /*return*/];
         }
     });
 }); };
-exports.connectDB = connectDB;
+exports.default = authorization;
