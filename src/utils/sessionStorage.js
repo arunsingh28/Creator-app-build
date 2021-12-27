@@ -14,10 +14,10 @@ function sessionStorage(app) {
         saveUninitialized: true,
         // if protocal is https then set secure to true
         cookie: {
-            secure: false,
+            secure: true,
             maxAge: 60000,
             httpOnly: true,
-            domain: 'localhost'
+            // domain: 'localhost'
         }
     }));
 }
