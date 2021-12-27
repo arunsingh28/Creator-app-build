@@ -6,7 +6,7 @@ var mode = {
 };
 // if env is true mode is production  
 // if env is false mode is development
-var env = true;
+var env = false;
 var SERVER_HOSTNAME = process.env.SERVER_HOSTNAME || 'localhost';
 var SERVER_PORT = process.env.PORT || 5000;
 var SESSION_SECRET = ' c4e0cfcc8ca41eff91baf0ace559d2f381927655';
