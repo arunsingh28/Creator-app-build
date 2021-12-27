@@ -48,7 +48,7 @@ var connectDB = function () { return __awaiter(void 0, void 0, void 0, function 
             case 0: return [4 /*yield*/, mongoose_1.default.connect(config_1.default.mongodbUri, {
                     useNewUrlParser: true,
                     useUnifiedTopology: true,
-                    useCreateIndex: true
+                    // useCreateIndex: true
                     // useFindAndModify: false
                 })
                     .then(function () {
