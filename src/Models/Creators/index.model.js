@@ -93,9 +93,7 @@ creatorSchema.statics.findUser = function (userName, password) {
         var creator, isMatch;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    console.log(userName, password);
-                    return [4 /*yield*/, this.findOne({ userName: userName })];
+                case 0: return [4 /*yield*/, this.findOne({ userName: userName })];
                 case 1:
                     creator = _a.sent();
                     if (!creator)

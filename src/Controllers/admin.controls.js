@@ -42,7 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var index_model_1 = __importDefault(require("../Models/Creators/index.model"));
 function loginApi(req, res, next) {
     return __awaiter(this, void 0, void 0, function () {
-        var _a, userName, password, creator;
+        var _a, userName, password, isCreator;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
@@ -51,11 +51,11 @@ function loginApi(req, res, next) {
                     return [2 /*return*/, res.status(406).json({ message: 'username or password is not valid', auth: false })];
                 case 1: return [4 /*yield*/, index_model_1.default.findUser(userName, password)];
                 case 2:
-                    creator = _b.sent();
-                    if (!creator) {
+                    isCreator = _b.sent();
+                    if (!isCreator) {
                         return [2 /*return*/, res.status(406).json({ message: 'username or password is not valid', auth: false })];
                     }
-                    // console.log(creator)
+                    req.session.user = isCreator;
                     return [2 /*return*/, res.status(200).json({ message: 'login success', auth: true })];
             }
         });
@@ -67,7 +67,6 @@ function registerApi(req, res, next) {
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
-                    console.log(req.body);
                     _a = req.body, firstName = _a.firstName, lastName = _a.lastName, email = _a.email, password = _a.password, userName = _a.userName;
                     // if data is not valid
                     if (!firstName || !lastName || !email || !password || !userName) {
@@ -83,9 +82,13 @@ function registerApi(req, res, next) {
                     _b.label = 1;
                 case 1:
                     _b.trys.push([1, 3, , 4]);
-                    return [4 /*yield*/, newCreator.save()];
+                    return [4 /*yield*/, newCreator.save()
+                        // save user to session AFTER REGISTER
+                    ];
                 case 2:
                     _b.sent();
+                    // save user to session AFTER REGISTER
+                    req.session.user = newCreator;
                     return [2 /*return*/, res.status(200).json({ message: 'Registraion successfull', auth: true })];
                 case 3:
                     error_1 = _b.sent();
@@ -101,22 +104,25 @@ function registerApi(req, res, next) {
 }
 var logoutApi = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        console.log('before', req.session.user);
+        // delete current session
         delete req.session.user;
-        console.log('after', req.session.user);
         return [2 /*return*/, res.status(200).json({ message: 'you are successfully logout', auth: false })];
     });
 }); };
 var changeUserName = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, userName, changeTo;
-    return __generator(this, function (_b) {
-        _a = req.body, userName = _a.userName, changeTo = _a.changeTo;
-        if (userName === changeTo) {
-            return [2 /*return*/, res.status(401).json({ message: 'both username are same' })];
+    var _a, userName, changeUserName;
+    var _b, _c, _d, _e;
+    return __generator(this, function (_f) {
+        _a = req.body, userName = _a.userName, changeUserName = _a.changeUserName;
+        if (!userName || !changeUserName) {
+            return [2 /*return*/, res.status(406).json({ message: 'Please provide valid data', userName: (_b = req.session.user) === null || _b === void 0 ? void 0 : _b.userName, email: (_c = req.session.user) === null || _c === void 0 ? void 0 : _c.email })];
+        }
+        if (userName == changeUserName) {
+            return [2 /*return*/, res.status(401).json({ message: 'both username are same', userName: (_d = req.session.user) === null || _d === void 0 ? void 0 : _d.userName, email: (_e = req.session.user) === null || _e === void 0 ? void 0 : _e.email })];
         }
         index_model_1.default.updateOne({ userName: userName }, {
             $set: {
-                userName: changeTo
+                userName: changeUserName
             }
         }).then(function () { return res.send('username changed'); })
             .catch(function (err) { return res.send(err); });
